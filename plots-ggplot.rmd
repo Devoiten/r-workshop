@@ -23,6 +23,13 @@ ci_np <- read_excel(here("data", "ci_np.xlsx"))
 
 gg_base <- ggplot(ci_np, aes(x=year, y=visitors))
 
-gg_base+geom_area()
+gg_base + 
+  geom_point(aes(size=visitors, color=visitors), alpha=0.5)
+
+```
+```{r}
+##My second plot
+
+gg_base+geom_col(aes(fill=visitors))
 
 ```
