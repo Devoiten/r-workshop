@@ -1,0 +1,6 @@
+---
+title: "Ggplot-analysis"
+author: "Yevhen Barshchevskyi"
+date_modified: "21/01/2021"
+output: html_document
+---
