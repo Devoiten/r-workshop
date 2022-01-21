@@ -1,0 +1,44 @@
+---
+title: "pivot_lobsters"
+author: "Yevhen Barshchevskyi"
+date_modifited: "21/01/2021"
+output: html_document
+---
+
+```{r}
+#install.packages('skimr')
+#install.packages('kableExtra')
+library(tidyverse)
+library(readxl)
+library(here)
+library(skimr)  
+library(kableExtra)  
+
+```
+```{r}
+## Reading lobsters data with skip rows
+
+lobsters <- read_xlsx(here("data/lobsters.xlsx"), skip=4)
+
+```
+
+```{r}
+## Exploring data with skimr
+
+skim(lobsters)
+
+```
+
+```{r}
+##PivotTables
+
+siteyear_summary <- lobsters %>%
+  group_by(site, year) %>%
+  summarize(count_by_year=n(),
+            mean_size_mm=mean(size_mm, na.rm=TRUE),
+            sd_size_mm=sd(size_mm, na.rm=TRUE))
+
+siteyear_summary
+
+```
+
