@@ -1,8 +1,11 @@
 ---
 title: "pivot_lobsters"
 author: "Yevhen Barshchevskyi"
-date_modifited: "21/01/2021"
-output: html_document
+date_modifited: 21/01/2021
+output:
+  pdf_document: default
+  html_document: default
+  word_document: default
 ---
 
 ```{r}
