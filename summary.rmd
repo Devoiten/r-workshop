@@ -1,0 +1,54 @@
+---
+title: "summary.rmd"
+output: html_document
+author: "Yevhen Barshchevskyi"
+date_modified: "21/01/2021"
+---
+
+```{r}
+
+
+#install.packages("paletteer")
+
+library(tidyverse)
+library(here)
+library(paletteer)
+library(janitor)
+library(scales)
+
+```
+
+```{r}
+##Loading dataset
+
+us_landings <- read_csv(here("data","noaa_landings.csv"),
+                        na = "no data")
+summary(us_landings)
+```
+
+```{r}
+##Cleaning dataset
+salmon_clean <- us_landings %>% 
+  clean_names() %>% # Make column headers snake_case
+  mutate(
+    afs_name = str_to_lower(afs_name)
+  ) %>% # Converts character columns to lowercase
+  mutate(dollars_num = parse_number(dollars_usd)) %>% # Just keep numbers from $ column
+  filter(str_detect(afs_name, pattern = "salmon")) %>% # Only keep entries w/"salmon"
+  separate(afs_name, into = c("group", "subgroup"), sep = ", ") %>% # Note comma-space
+  drop_na(dollars_num) # Drop (listwise deletion) any observations with NA for dollars_num
+```
+
+```{r}
+##Salmon annual sales
+
+salmon_us_annual <- salmon_clean %>%
+  group_by(year, subgroup) %>%
+  summarise(us_annual = sum(dollars_num, na.rm=TRUE))
+
+salesgraph <- ggplot(salmon_us_annual, aes(x=year, y=us_annual, color=subgroup))
+
+salesgraph + geom_line() + theme_light() + labs(x="Year", y="Sales in US Dollars") + scale_y_continuous(labels = comma) + scale_color_paletteer_d("beyonce::X47")
+```
+
+
