@@ -54,5 +54,24 @@ inverts_wide <- pivot_wider(inverts_long, names_from = common_name, values_from 
 
 inverts_wide <- inverts_wide %>% clean_names()
 
+##Tried dedupes function
+
 inverts_wide %>% get_dupes(site)
+```
+
+```{r}
+##Uniting and splitting different columns
+
+inverts_unite <- inverts_long %>% unite(col="site_year", c(site, year), sep="_")
+
+inverst_sep <- inverts_unite %>% separate(site_year, into=c("my_site", "my_year"))
+
+##Replacing text string with patter specified by column name
+ca_abbr <- inverts %>% 
+  mutate(
+    common_name = 
+      str_replace(common_name, 
+              pattern = "california", 
+              replacement = "CA")
+  )
 ```
