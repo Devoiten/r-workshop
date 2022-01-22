@@ -1,0 +1,58 @@
+---
+title: "making-tidy.rmd"
+author: "Yevhen Barshchevskyi"
+date_modified: "22/01/2021"
+output: html_document
+---
+
+```{r}
+##Loading libraries
+#install.packages("janitor")
+
+library(tidyverse)
+library(here)
+library(janitor)
+library(readxl)
+
+
+```
+
+```{r}
+##Read data from excel
+
+inverts <- read_excel(here("data", "inverts.xlsx"))
+
+summary(inverts)
+```
+
+```{r}
+##Transform data from wide formate to long format
+
+inverts_long <- pivot_longer(data = inverts, 
+                                    cols = '2016':'2018',
+                                    names_to = "year",
+                                    values_to = "sp_count")
+class(inverts_long$year)
+```
+
+```{r}
+##Converting years to numeric
+
+inverts_long <- inverts_long %>% mutate(year=as.numeric(year))
+
+class(inverts_long$year)
+
+
+```
+
+```{r}
+##Converting from long to wider format
+
+inverts_wide <- pivot_wider(inverts_long, names_from = common_name, values_from = sp_count)
+
+##One type formatting for column names
+
+inverts_wide <- inverts_wide %>% clean_names()
+
+inverts_wide %>% get_dupes(site)
+```
