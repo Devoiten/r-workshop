@@ -3,8 +3,8 @@ title: "pivot_lobsters"
 author: "Yevhen Barshchevskyi"
 date_modifited: 21/01/2021
 output:
-  pdf_document: default
   html_document: default
+  pdf_document: default
   word_document: default
 ---
 
@@ -32,7 +32,7 @@ skim(lobsters)
 
 ```
 
-```{r}
+```{r echo=FALSE}
 ##PivotTables
 
 siteyear_summary <- lobsters %>%
@@ -43,6 +43,32 @@ siteyear_summary <- lobsters %>%
 
 siteyear_summary
 
+##Kable Table Formatting
+
+siteyear_summary %>% kable()
+
 ```
 
-"There are `r nrow(lobsters)` total lobsters included in this report"
+```{r}
+## Plot lobster mean size by site & year
+
+lobbysize <- ggplot(siteyear_summary, aes(x=year, y=mean_size_mm, color=site))+geom_line()
+
+lobbysize
+
+
+ggsave(here("figures", "lobsters-line.png"))
+```
+
+```{r}
+##Using mutate function to change the dataframe & select to select columns
+
+lobsters_detailed <- lobsters %>%
+  mutate(size_m = size_mm / 1000, 
+         millenia = 2000,
+         observer = "Allison Horst")
+
+lobsters_detailed %>% 
+  select(date, site, size_mm)
+
+```
